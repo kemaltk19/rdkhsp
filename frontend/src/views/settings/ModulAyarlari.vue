@@ -21,6 +21,9 @@ import ExpenseCategoriesTab from './components/ExpenseCategoriesTab.vue'
 import EmployeeSettingsTab from './components/EmployeeSettingsTab.vue'
 import CariGroupsTab from './components/CariGroupsTab.vue'
 import ProjectCategoriesTab from './components/ProjectCategoriesTab.vue'
+import AccountsTab from './components/AccountsTab.vue'
+import KdvRatesTab from './components/KdvRatesTab.vue'
+import CurrenciesTab from './components/CurrenciesTab.vue'
 
 const settingsStore = useSettingsStore()
 const paymentStore = usePaymentStore()
@@ -210,6 +213,7 @@ const savePaymentSettings = async () => {
         <Tab value="employee"><i class="pi pi-id-card mr-1"></i>Personel</Tab>
         <Tab value="project"><i class="pi pi-briefcase mr-1"></i>Projeler</Tab>
         <Tab value="payment"><i class="pi pi-wallet mr-1"></i>Kasa & Ödeme</Tab>
+        <Tab value="kdvdoviz"><i class="pi pi-percentage mr-1"></i>KDV & Döviz</Tab>
       </TabList>
 
       <TabPanels class="ma-panels">
@@ -421,6 +425,32 @@ const savePaymentSettings = async () => {
               </div>
             </div>
           </div>
+          <div class="ma-block ma-block--flex mt-4">
+            <div class="ma-block-header">
+              <h2 class="ma-block-title">Kasa / Banka Tanımları</h2>
+              <p class="ma-block-desc">Nakit ve banka hesaplarınızı tanımlayın ve yönetin.</p>
+            </div>
+            <AccountsTab />
+          </div>
+        </TabPanel>
+
+        <TabPanel value="kdvdoviz">
+          <div class="ma-2col">
+            <div class="ma-block ma-block--flex">
+              <div class="ma-block-header">
+                <h2 class="ma-block-title">KDV Tanımları</h2>
+                <p class="ma-block-desc">Sistem genelinde kullanılacak KDV oranlarını yönetin.</p>
+              </div>
+              <KdvRatesTab />
+            </div>
+            <div class="ma-block ma-block--flex">
+              <div class="ma-block-header">
+                <h2 class="ma-block-title">Para Birimleri</h2>
+                <p class="ma-block-desc">Sistem genelinde geçerli para birimlerini tanımlayın.</p>
+              </div>
+              <CurrenciesTab />
+            </div>
+          </div>
         </TabPanel>
 
       </TabPanels>
@@ -430,16 +460,13 @@ const savePaymentSettings = async () => {
 
 <style scoped>
 .ma-root {
-  padding: 1.25rem 1.5rem;
-  background: #f7f8fb;
-  min-height: calc(100vh - 64px);
+  padding: 0;
+  background: transparent;
+  min-height: 0;
 }
-:root.p-dark .ma-root { background: #0f172a; }
+:root.p-dark .ma-root { background: transparent; }
 
-.ma-header { margin-bottom: 1.25rem; }
-.ma-title { font-size: 1.1rem; font-weight: 700; color: #1a202c; margin: 0 0 0.2rem; }
-:root.p-dark .ma-title { color: #f1f5f9; }
-.ma-desc { font-size: 0.78rem; color: #718096; margin: 0; }
+.ma-header { display: none; }
 
 .ma-tablist :deep(.p-tablist-tab-list) {
   border-bottom: 1px solid #e8eaf0;
@@ -448,8 +475,8 @@ const savePaymentSettings = async () => {
 }
 :root.p-dark .ma-tablist :deep(.p-tablist-tab-list) { border-bottom-color: rgba(255,255,255,0.07); }
 .ma-tablist :deep(.p-tab) {
-  font-size: 0.82rem;
-  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  padding: 0.7rem 1.15rem;
   color: #718096;
   border-bottom: 2px solid transparent;
   border-radius: 0;

@@ -18,11 +18,9 @@ import PhoneInput from '@/components/PhoneInput.vue'
 import { countries } from '@/constants/countries'
 import { sectors } from '@/constants/sectors'
 
-import AccountsTab from './components/AccountsTab.vue'
-import KdvRatesTab from './components/KdvRatesTab.vue'
-import CurrenciesTab from './components/CurrenciesTab.vue'
 import ImportTab from './components/ImportTab.vue'
 import ModulesTab from './components/ModulesTab.vue'
+import ModulAyarlari from './ModulAyarlari.vue'
 
 const settingsStore = useSettingsStore()
 const currencyStore = useCurrencyStore()
@@ -114,15 +112,7 @@ const settingsNav: NavGroup[] = [
     items: [
       { id: 'profile',        label: 'Firma Profili',        icon: 'pi pi-id-card' },
       { id: 'modules',        label: 'Modül Yönetimi',       icon: 'pi pi-check-square' },
-      { id: 'finance',        label: 'Sistem Parametreleri', icon: 'pi pi-sliders-h' },
       { id: 'modul_ayarlari', label: 'Modül Ayarları',       icon: 'pi pi-th-large' },
-    ],
-  },
-  {
-    groupLabel: 'Kasa & Banka',
-    groupIcon: 'pi pi-wallet',
-    items: [
-      { id: 'accounts', label: 'Kasa / Banka Tanımları', icon: 'pi pi-wallet' },
     ],
   },
   {
@@ -142,10 +132,6 @@ const settingsNav: NavGroup[] = [
 ]
 
 const handleNavClick = (id: string) => {
-  if (id === 'modul_ayarlari') {
-    router.push('/settings/modules')
-    return
-  }
   activeTab.value = id
 }
 
@@ -556,35 +542,6 @@ const daysBarClass = computed(() => {
           </div>
         </div>
 
-        <!-- ========== SİSTEM PARAMETRELERİ ========== -->
-        <div v-else-if="activeTab === 'finance'" class="sp-panel sp-panel--2col">
-          <div class="sp-block sp-block--flex">
-            <div class="sp-block-header">
-              <h2 class="sp-block-title">KDV Tanımları</h2>
-              <p class="sp-block-desc">Sistem genelinde kullanılacak KDV oranlarını yönetin.</p>
-            </div>
-            <KdvRatesTab />
-          </div>
-          <div class="sp-block sp-block--flex">
-            <div class="sp-block-header">
-              <h2 class="sp-block-title">Para Birimleri</h2>
-              <p class="sp-block-desc">Sistem genelinde geçerli para birimlerini tanımlayın.</p>
-            </div>
-            <CurrenciesTab />
-          </div>
-        </div>
-
-        <!-- ========== KASA / BANKA ========== -->
-        <div v-else-if="activeTab === 'accounts'" class="sp-panel">
-          <div class="sp-block sp-block--flex">
-            <div class="sp-block-header">
-              <h2 class="sp-block-title">Kasa / Banka Tanımları</h2>
-              <p class="sp-block-desc">Nakit ve banka hesaplarınızı tanımlayın ve yönetin.</p>
-            </div>
-            <AccountsTab />
-          </div>
-        </div>
-
         <!-- ========== İÇE AKTAR ========== -->
         <div v-else-if="activeTab === 'import'" class="sp-panel">
           <div class="sp-block sp-block--flex">
@@ -594,6 +551,11 @@ const daysBarClass = computed(() => {
             </div>
             <ImportTab />
           </div>
+        </div>
+
+        <!-- ========== MODÜL AYARLARI ========== -->
+        <div v-else-if="activeTab === 'modul_ayarlari'" class="sp-panel sp-panel--bare">
+          <ModulAyarlari />
         </div>
 
         <!-- ========== ABONELİK ========== -->
@@ -790,9 +752,9 @@ const daysBarClass = computed(() => {
 
 .sp-group-label {
   padding: 0 1rem 0.3rem;
-  font-size: 0.7rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #a0aec0;
 }
@@ -803,8 +765,8 @@ const daysBarClass = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.55rem 1rem;
-  font-size: 0.875rem;
+  padding: 0.62rem 1rem;
+  font-size: 1rem;
   color: #4a5568;
   cursor: pointer;
   border-left: 2px solid transparent;
@@ -815,7 +777,7 @@ const daysBarClass = computed(() => {
 .sp-item:hover { color: #06b6d4; background: rgba(6,182,212,0.04); }
 .sp-item--active { color: #06b6d4 !important; border-left-color: #06b6d4; background: rgba(6,182,212,0.06); font-weight: 600; }
 :root.p-dark .sp-item--active { background: rgba(6,182,212,0.1); }
-.sp-item-icon { font-size: 0.75rem; flex-shrink: 0; opacity: 0.8; }
+.sp-item-icon { font-size: 0.9rem; flex-shrink: 0; opacity: 0.8; }
 
 .sp-content {
   flex: 1;

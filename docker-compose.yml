@@ -1,0 +1,67 @@
+# Radikal Hesap Lite — Production/Deploy compose
+# NOT (canlı): JWT_SECRET ve DB şifrelerini mutlaka güçlü değerlerle değiştirin
+# ve tercihen bir .env dosyasından (${VAR}) okutun. Buradaki değerler başlangıç içindir.
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: radikal_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      # Uygulama bu DB'yi bekliyor. İlk kurulumda otomatik oluşturulur.
+      POSTGRES_DB: radikal_hesap
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # RLS rolleri (radikal_app / radikal_system) ilk kurulumda otomatik oluşturulur.
+      # Bu script SADECE volume boşken (ilk init) radikal_hesap DB'sinde çalışır.
+      - ./backend/database/roles.sql:/docker-entrypoint-initdb.d/01-roles.sql:ro
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: radikal_backend
+    restart: always
+    ports:
+      - "9001:9001"
+    environment:
+      - APP_ENV=production
+      - PORT=9001
+      # Kod iki ayrı DSN bekliyor (RLS app rolü + system bypass rolü). Host = db.
+      - DATABASE_URL=postgres://radikal_app:app_pass@db:5432/radikal_hesap?sslmode=disable
+      - SYSTEM_DATABASE_URL=postgres://radikal_system:sys_pass@db:5432/radikal_hesap?sslmode=disable
+      # Canlıda MUTLAKA değiştirin (32+ byte rastgele). Aşağıdaki sadece ilk çalıştırma için.
+      - JWT_SECRET=dev_only_change_in_production_3f9a8b2c1d7e6f5a
+      - ACCESS_TTL=15m
+      - REFRESH_TTL=168h
+      # HTTPS arkasında true olmalı (Secure cookie).
+      - COOKIE_SECURE=true
+      # CORS izinli origin (frontend'in gerçek adresi).
+      - FRONTEND_ORIGIN=http://localhost:9000
+      # İlk superadmin (ilk kurulumda seed edilir).
+      - SUPERADMIN_EMAIL=admin@radikalhesap.com
+      - SUPERADMIN_PASSWORD=change_me_admin_2026
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Build sırasında gömülür. Tarayıcıdan erişilecek API adresi.
+        # Aynı domain reverse-proxy kullanıyorsanız "/api" verin.
+        VITE_API_URL: http://localhost:9001/api
+    container_name: radikal_frontend
+    restart: always
+    ports:
+      - "9000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

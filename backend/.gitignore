@@ -1,0 +1,22 @@
+# Derlenmiş Go binary'leri (versiyon kontrolüne girmemeli)
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+main
+radikal-hesap
+
+# Air / canlı yeniden derleme geçici dosyaları
+tmp/
+*.tmp
+
+# Test çıktıları
+*.test
+*.out
+coverage.txt
+
+# Ortam değişkenleri (gizli bilgiler içerir)
+.env
+.env.local
+.env.*.local
